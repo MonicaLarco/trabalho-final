@@ -11,6 +11,10 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/app', express.static (path.join (__dirname, '/public')));
 
+const apiRouter = require('./routes/apiRouter');
+app.use('/api', apiRouter);
+
+
 let port = process.env.PORT || 3000;
 app.listen (port, () => console.info(`Listening on ${ port }`));
 
