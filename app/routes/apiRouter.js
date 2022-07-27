@@ -15,7 +15,7 @@ const knex = require('knex')({
 
 // Authenticate password
 let checkToken = (req, res, next) => {
-    let authToken = req.headers["authorization"]
+    let authToken = req.headers['authorization'];
     if (!authToken) {        
         res.status(401).json({ message: 'Token de acesso requerida' })
     }
@@ -34,7 +34,7 @@ let checkToken = (req, res, next) => {
     })
 };
 
-// Check user role
+// // Check user role
 let isAdmin = (req, res, next) => {
     knex
         .select ('*').from ('usuario').where({ id: req.usuarioId })
@@ -60,7 +60,7 @@ let isAdmin = (req, res, next) => {
 };
 
 //Get list of products
-apiRouter.get('/produtos', (req, res) => {
+apiRouter.get('/produtos', checkToken, (req, res) => {
     knex.select('*').from('produto')
     .then( produtos => res.status(200).json(produtos) )
     .catch(err => {
@@ -70,7 +70,7 @@ apiRouter.get('/produtos', (req, res) => {
 });
 
 // Add a new product
-apiRouter.post('/produtos', express.json(), (req, res) => {
+apiRouter.post('/produtos', checkToken, isAdmin, express.json(), (req, res) => {
     knex('produto')
         .insert({
             descricao: req.body.descricao,
@@ -85,7 +85,7 @@ apiRouter.post('/produtos', express.json(), (req, res) => {
 });
 
 // Get a product by ID
-apiRouter.get('/produtos/:id', (req, res) => {
+apiRouter.get('/produtos/:id', checkToken, (req, res) => {
     let id = Number.parseInt(req.params.id);
     if (id > 0) {
         knex
@@ -106,7 +106,7 @@ apiRouter.get('/produtos/:id', (req, res) => {
 });
 
 // Update Product details
-apiRouter.put('/produtos/:id', (req, res) => {
+apiRouter.put('/produtos/:id', checkToken, isAdmin, (req, res) => {
     let id = Number.parseInt(req.params.id);
     if (id > 0) {
         knex('produto')
@@ -128,7 +128,7 @@ apiRouter.put('/produtos/:id', (req, res) => {
 });
 
 // Delete a Product
-apiRouter.delete('/produtos/:id', (req, res) => {
+apiRouter.delete('/produtos/:id', checkToken, isAdmin, (req, res) => {
     let id = Number.parseInt(req.params.id);
     if (id > 0) {
         knex('produto')
