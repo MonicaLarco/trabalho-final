@@ -1,8 +1,6 @@
-body {
-    background-color: yellow;
-}
 
-.logo {
-    display: block;
-    margin: 0 auto;
+body {
+  padding: 2%;
+  margin: auto;
+  background-color: #6e42c1a9;
 }
